@@ -49,14 +49,18 @@ jobs:
         image: postgres:17-alpine
         env:
           POSTGRES_USER: postilla
-          POSTGRES_PASSWORD: postilla
           POSTGRES_DB: postilla
+          # No password, deliberately. This container lives for the length of
+          # one job, listens only on the runner's loopback, and is destroyed
+          # afterwards — so a password here would be theatre, and a literal one
+          # in the repo trips secret scanners for no benefit.
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports: ['5432:5432']
         options: >-
           --health-cmd "pg_isready -U postilla -d postilla"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      DATABASE_URL: postgres://postilla:postilla@localhost:5432/postilla
+      DATABASE_URL: postgres://postilla@localhost:5432/postilla
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4

@@ -1,6 +1,8 @@
-# Local development environment, integration-test substrate, and the
-# self-hosting story — deliberately the same file for all three, so the
-# thing we test against is the thing someone else would run.
+# Local development and integration-test environment.
+#
+# NOT a production configuration: the database trusts every connection and
+# holds throwaway data. A real deployment needs a real password, TLS, and
+# backups — see docs/adr and the deployment notes in the README.
 
 services:
   postgres:
@@ -8,10 +10,15 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: postilla
-      POSTGRES_PASSWORD: postilla
       POSTGRES_DB: postilla
+      # Passwordless on purpose. Committing a literal password — even a fake
+      # one — trains people to ignore secret-scanner alerts, and the port is
+      # bound to loopback below, so nothing off this machine can reach it.
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - '5432:5432'
+      # Loopback only. A bare '5432:5432' would publish a trust-auth database
+      # to the whole local network.
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -26,8 +33,8 @@ services:
     image: axllent/mailpit:latest
     restart: unless-stopped
     ports:
-      - '8025:8025'
-      - '1025:1025'
+      - '127.0.0.1:8025:8025'
+      - '127.0.0.1:1025:1025'
     environment:
       MP_MAX_MESSAGES: 500
 

@@ -91,9 +91,10 @@ hashing need native modules, and cold starts are especially costly for a widget
 that loads on every page of a blog. Because the transport layer is thin, that
 decision is revisitable without touching the application.
 
-`docker-compose.yml` is deliberately the local dev environment, the
-integration-test substrate, and the self-hosting story all at once — so what we
-test against is what someone else would run.
+`docker-compose.yml` covers local development and the integration tests, so
+what we test against is what we develop against. It is **not** a production
+configuration — its database trusts every connection and is bound to loopback.
+A deployment needs a real password, TLS, and backups.
 
 ## Decisions
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { loadConfig } from './env.js';
 
 const valid = {
-  DATABASE_URL: 'postgres://user:pass@localhost:5432/postilla',
+  DATABASE_URL: 'postgres://postilla@localhost:5432/postilla',
   SERVER_URL: 'http://localhost:8360',
   SITE_NAME: 'Test Site',
   SECRET_KEY: 'a'.repeat(32),

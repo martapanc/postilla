@@ -11,7 +11,7 @@ import type { Container } from '../../container.js';
  */
 
 const config = loadConfig({
-  DATABASE_URL: 'postgres://user:pass@localhost:5432/postilla',
+  DATABASE_URL: 'postgres://postilla@localhost:5432/postilla',
   SERVER_URL: 'http://localhost:8360',
   SITE_NAME: 'Test Site',
   SECRET_KEY: 'a'.repeat(32),
