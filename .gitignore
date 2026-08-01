@@ -1,0 +1,22 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+.env
+.env.*
+!.env.example
+
+# LeanCloud exports contain PII (emails, IPs). Never commit them.
+snapshots/
+*.ndjson
+rejects.ndjson
+
+.DS_Store
+*.log
+.vitest/
+playwright-report/
+test-results/
+
+.idea
