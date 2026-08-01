@@ -95,14 +95,6 @@ CREATE TABLE "sessions" (
 	CONSTRAINT "sessions_refresh_token_hash_unique" UNIQUE("refresh_token_hash")
 );
 --> statement-breakpoint
-CREATE TABLE "user_identities" (
-	"user_id" uuid NOT NULL,
-	"provider" text NOT NULL,
-	"provider_user_id" text NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "user_identities_provider_provider_user_id_pk" PRIMARY KEY("provider","provider_user_id")
-);
---> statement-breakpoint
 CREATE TABLE "user_verifications" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -145,7 +137,6 @@ ALTER TABLE "reaction_baselines" ADD CONSTRAINT "reaction_baselines_kind_key_rea
 ALTER TABLE "reactions" ADD CONSTRAINT "reactions_page_id_pages_id_fk" FOREIGN KEY ("page_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "reactions" ADD CONSTRAINT "reactions_kind_key_reaction_kinds_key_fk" FOREIGN KEY ("kind_key") REFERENCES "public"."reaction_kinds"("key") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "user_identities" ADD CONSTRAINT "user_identities_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_verifications" ADD CONSTRAINT "user_verifications_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "comments_page_status_created_idx" ON "comments" USING btree ("page_id","status","created_at" DESC NULLS LAST);--> statement-breakpoint
 CREATE INDEX "comments_root_created_idx" ON "comments" USING btree ("root_id","created_at");--> statement-breakpoint
@@ -159,5 +150,4 @@ CREATE UNIQUE INDEX "reactions_page_kind_visitor_key" ON "reactions" USING btree
 CREATE INDEX "reactions_page_kind_idx" ON "reactions" USING btree ("page_id","kind_key");--> statement-breakpoint
 CREATE INDEX "sessions_user_id_idx" ON "sessions" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "sessions_family_id_idx" ON "sessions" USING btree ("family_id");--> statement-breakpoint
-CREATE INDEX "user_identities_user_id_idx" ON "user_identities" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "user_verifications_user_id_idx" ON "user_verifications" USING btree ("user_id");

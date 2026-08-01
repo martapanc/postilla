@@ -12,7 +12,11 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['apps/**/src/**/*.test.ts', 'packages/**/src/**/*.test.ts'],
+          include: [
+            'apps/**/src/**/*.test.ts',
+            'packages/**/src/**/*.test.ts',
+            'tools/**/src/**/*.test.ts',
+          ],
           // Specifying `exclude` replaces Vitest's defaults, so node_modules
           // has to be named explicitly or dependency test suites get collected.
           exclude: ['**/node_modules/**', '**/dist/**', '**/*.integration.test.ts'],

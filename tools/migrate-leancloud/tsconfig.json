@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // This tool is executed with tsx and never emits, so there is no rootDir
+    // to respect — which is what lets it typecheck directly against the
+    // server's schema source.
+    "noEmit": true,
+    "types": ["node"],
+    // At runtime tsx resolves this through the server's exports map.
+    // TypeScript will not resolve a .ts file through an exports map, so the
+    // type side is pointed at the same source file explicitly. Both reach one
+    // definition: the migrator must never drift from the server schema.
+    "paths": {
+      "@postilla/server/schema": ["../../apps/server/src/infrastructure/db/schema.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -75,25 +75,10 @@ export const users = pgTable('users', {
 });
 
 /**
- * First-party OAuth identities. The old server delegated the entire flow to a
- * third-party host (oauth.lithub.cc) and trusted the identity it returned;
- * that proxy is deliberately not carried forward.
+ * There is deliberately no `user_identities` table. Waline supported six
+ * social providers, but the migrated data has zero linked accounts, and
+ * authentication is password + TOTP. See docs/adr/0003.
  */
-export const userIdentities = pgTable(
-  'user_identities',
-  {
-    userId: uuid('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    provider: text('provider').notNull(),
-    providerUserId: text('provider_user_id').notNull(),
-    createdAt,
-  },
-  (t) => [
-    primaryKey({ columns: [t.provider, t.providerUserId] }),
-    index('user_identities_user_id_idx').on(t.userId),
-  ],
-);
 
 /** Replaces the old `type = 'verify:CODE:EXPIRY'` string overloading. */
 export const userVerifications = pgTable(

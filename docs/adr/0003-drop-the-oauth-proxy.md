@@ -1,6 +1,8 @@
-# 3. Drop the third-party OAuth proxy
+# 3. Drop social login entirely
 
 **Status:** Accepted · **Date:** 2026-08-01
+**Supersedes:** an earlier draft of this ADR that proposed rebuilding social
+login first-party. Data from the LeanCloud export changed the decision.
 
 ## Context
 
@@ -10,26 +12,37 @@ our control, with no security contact, audit, or SLA. That host receives the
 authorization code and returns an identity assertion which the server then
 trusts and maps onto a row in the users table.
 
+Whoever controls that host can mint an identity for any provider account.
+Because the first registered user is an administrator, the blast radius
+plausibly includes authenticating as one. Removing the proxy was never in
+question.
+
+The open question was what replaces it. The plan was to rebuild the flow
+first-party with `arctic`, starting with GitHub.
+
 ## Decision
 
-Delete the proxy and the `github`/`twitter`/`facebook`/`google`/`weibo`/`qq`
-columns. Rebuild social login first-party with `arctic`, GitHub first, with the
-callback on our own origin, storing identities in a `user_identities` table.
+Remove social login and do not replace it. Authentication is password (argon2id)
+plus TOTP. There is no `user_identities` table.
 
 ## Rationale
 
-Whoever controls that host can mint an identity for any provider account. Since
-identities map onto user rows and the first registered user is an
-administrator, the blast radius plausibly includes authenticating as an admin.
-For a single-author blog with one or two moderators, that is a large amount of
-trust extended to a third party for a convenience feature.
+The LeanCloud export settled it. The database contains **one** user account,
+and every social column on it — `github`, `twitter`, `facebook`, `google`,
+`weibo`, `qq` — is empty. The feature has never been used. That account already
+has TOTP enabled with a real 32-character secret, so the strong second factor
+this would nominally add is already present.
 
-The replacement is not much code: an authorization redirect, a callback that
-exchanges the code, and a lookup keyed on `(provider, provider_user_id)`.
+Building an OAuth flow, registering provider applications, and carrying their
+secrets would be solving a problem nobody has. A subsystem with no users is not
+a showcase; it is maintenance and attack surface.
 
 ## Consequences
 
-Each provider must be registered as an OAuth application and configured with
-its own secret, so adding providers has a real per-provider cost. That cost is
-the correct signal: GitHub is likely the only one worth carrying. Password plus
-TOTP remains the primary path, so social login is never load-bearing.
+A future second moderator who wants social login needs the flow _and_ a schema
+migration, rather than just the flow. That is the right trade at one user: the
+migration is small, and deferring it means today's schema describes what the
+system actually does.
+
+If it is ever built, it must be first-party — callback on our own origin,
+identities keyed on `(provider, provider_user_id)` — and never through a proxy.

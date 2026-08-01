@@ -150,6 +150,13 @@ export default tseslint.config(
     },
   },
 
+  // Command-line entry points report to stdout by design; that is their
+  // interface, not stray debugging.
+  {
+    files: ['tools/**/src/cli.ts', 'apps/server/src/infrastructure/db/migrate.ts'],
+    rules: { 'no-console': 'off' },
+  },
+
   // Fastify's plugin contract is an async function; an `await`-free one is
   // idiomatic there, not an oversight.
   {
