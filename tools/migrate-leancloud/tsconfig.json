@@ -11,7 +11,8 @@
     // type side is pointed at the same source file explicitly. Both reach one
     // definition: the migrator must never drift from the server schema.
     "paths": {
-      "@postilla/server/schema": ["../../apps/server/src/infrastructure/db/schema.ts"]
+      "@postilla/server/schema": ["../../apps/server/src/infrastructure/db/schema.ts"],
+      "@postilla/server/domain/page-path": ["../../apps/server/src/domain/page/path.ts"]
     }
   },
   "include": ["src/**/*.ts"],

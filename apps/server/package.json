@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "main": "./dist/main.js",
+  "//exports": "Subpaths resolve to source, not dist: the migration tool binds to the same definitions the server uses, with no build step between them. Note that `exports` may not mix subpath keys with anything else, so this note lives outside it.",
   "exports": {
     ".": "./dist/main.js",
-    "//": "Source, not dist: the migration tool runs under tsx and must bind to the same schema definition the server uses, with no build step between them.",
-    "./schema": "./src/infrastructure/db/schema.ts"
+    "./schema": "./src/infrastructure/db/schema.ts",
+    "./domain/page-path": "./src/domain/page/path.ts"
   },
   "scripts": {
     "dev": "tsx watch src/main.ts",
@@ -24,6 +25,8 @@
     "@fastify/helmet": "^13.1.0",
     "@fastify/rate-limit": "^11.2.0",
     "@fastify/static": "^10.1.2",
+    "@fastify/swagger": "^9.8.1",
+    "@postilla/contract": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "fastify": "^5.11.0",
     "fastify-type-provider-zod": "^7.0.0",

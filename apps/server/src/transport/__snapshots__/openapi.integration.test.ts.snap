@@ -1,0 +1,980 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OpenAPI document > matches the committed snapshot 1`] = `
+{
+  "components": {
+    "schemas": {},
+  },
+  "info": {
+    "description": "Comment system for static blogs.",
+    "title": "Postilla API",
+    "version": "0.1.0",
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/api/comments": {
+      "get": {
+        "description": "Pagination applies to root comments; every reply belonging to a returned root is included, so a thread is never split across pages.",
+        "parameters": [
+          {
+            "description": "Page path, e.g. /my-post. Absolute URLs are accepted and reduced to their path.",
+            "in": "query",
+            "name": "path",
+            "required": true,
+            "schema": {
+              "maxLength": 2048,
+              "minLength": 1,
+              "type": "string",
+            },
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "latest",
+              "enum": [
+                "latest",
+                "oldest",
+                "hottest",
+              ],
+              "type": "string",
+            },
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 9007199254740991,
+              "minimum": 1,
+              "type": "integer",
+            },
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "pagination": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "page": {
+                          "maximum": 9007199254740991,
+                          "minimum": -9007199254740991,
+                          "type": "integer",
+                        },
+                        "pageSize": {
+                          "maximum": 9007199254740991,
+                          "minimum": -9007199254740991,
+                          "type": "integer",
+                        },
+                        "total": {
+                          "description": "Total matching root comments, ignoring pagination.",
+                          "maximum": 9007199254740991,
+                          "minimum": -9007199254740991,
+                          "type": "integer",
+                        },
+                        "totalPages": {
+                          "maximum": 9007199254740991,
+                          "minimum": -9007199254740991,
+                          "type": "integer",
+                        },
+                      },
+                      "required": [
+                        "page",
+                        "pageSize",
+                        "total",
+                        "totalPages",
+                      ],
+                      "type": "object",
+                    },
+                    "threads": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "replies": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "authorAvatarUrl": {
+                                  "format": "uri",
+                                  "nullable": true,
+                                  "type": "string",
+                                },
+                                "authorIsAdmin": {
+                                  "type": "boolean",
+                                },
+                                "authorName": {
+                                  "type": "string",
+                                },
+                                "authorUrl": {
+                                  "format": "uri",
+                                  "nullable": true,
+                                  "type": "string",
+                                },
+                                "bodyHtml": {
+                                  "type": "string",
+                                },
+                                "createdAt": {
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                                  "type": "string",
+                                },
+                                "id": {
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                  "type": "string",
+                                },
+                                "isSticky": {
+                                  "type": "boolean",
+                                },
+                                "likeCount": {
+                                  "maximum": 9007199254740991,
+                                  "minimum": 0,
+                                  "type": "integer",
+                                },
+                                "parentId": {
+                                  "format": "uuid",
+                                  "nullable": true,
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                  "type": "string",
+                                },
+                                "replyToName": {
+                                  "nullable": true,
+                                  "type": "string",
+                                },
+                              },
+                              "required": [
+                                "id",
+                                "parentId",
+                                "authorName",
+                                "authorUrl",
+                                "authorAvatarUrl",
+                                "authorIsAdmin",
+                                "bodyHtml",
+                                "createdAt",
+                                "isSticky",
+                                "likeCount",
+                                "replyToName",
+                              ],
+                              "type": "object",
+                            },
+                            "type": "array",
+                          },
+                          "root": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "authorAvatarUrl": {
+                                "format": "uri",
+                                "nullable": true,
+                                "type": "string",
+                              },
+                              "authorIsAdmin": {
+                                "type": "boolean",
+                              },
+                              "authorName": {
+                                "type": "string",
+                              },
+                              "authorUrl": {
+                                "format": "uri",
+                                "nullable": true,
+                                "type": "string",
+                              },
+                              "bodyHtml": {
+                                "type": "string",
+                              },
+                              "createdAt": {
+                                "format": "date-time",
+                                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                                "type": "string",
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string",
+                              },
+                              "isSticky": {
+                                "type": "boolean",
+                              },
+                              "likeCount": {
+                                "maximum": 9007199254740991,
+                                "minimum": 0,
+                                "type": "integer",
+                              },
+                              "parentId": {
+                                "format": "uuid",
+                                "nullable": true,
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string",
+                              },
+                              "replyToName": {
+                                "nullable": true,
+                                "type": "string",
+                              },
+                            },
+                            "required": [
+                              "id",
+                              "parentId",
+                              "authorName",
+                              "authorUrl",
+                              "authorAvatarUrl",
+                              "authorIsAdmin",
+                              "bodyHtml",
+                              "createdAt",
+                              "isSticky",
+                              "likeCount",
+                              "replyToName",
+                            ],
+                            "type": "object",
+                          },
+                        },
+                        "required": [
+                          "root",
+                          "replies",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "totalComments": {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                  },
+                  "required": [
+                    "threads",
+                    "pagination",
+                    "totalComments",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                    },
+                    "detail": {
+                      "type": "string",
+                    },
+                    "errors": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "message",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "instance": {
+                      "type": "string",
+                    },
+                    "status": {
+                      "maximum": 9007199254740991,
+                      "minimum": -9007199254740991,
+                      "type": "integer",
+                    },
+                    "title": {
+                      "type": "string",
+                    },
+                    "type": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "detail",
+                    "instance",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+        },
+        "summary": "List approved comment threads for a page",
+        "tags": [
+          "comments",
+        ],
+      },
+    },
+    "/api/comments/count": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "paths",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "counts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "count": {
+                            "maximum": 9007199254740991,
+                            "minimum": 0,
+                            "type": "integer",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "count",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                  },
+                  "required": [
+                    "counts",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                    },
+                    "detail": {
+                      "type": "string",
+                    },
+                    "errors": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "message",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "instance": {
+                      "type": "string",
+                    },
+                    "status": {
+                      "maximum": 9007199254740991,
+                      "minimum": -9007199254740991,
+                      "type": "integer",
+                    },
+                    "title": {
+                      "type": "string",
+                    },
+                    "type": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "detail",
+                    "instance",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+        },
+        "summary": "Approved comment counts for up to 100 pages",
+        "tags": [
+          "comments",
+        ],
+      },
+    },
+    "/api/pages": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "paths",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "pages": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "commentCount": {
+                            "maximum": 9007199254740991,
+                            "minimum": 0,
+                            "type": "integer",
+                          },
+                          "pageviews": {
+                            "maximum": 9007199254740991,
+                            "minimum": 0,
+                            "type": "integer",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                          "reactions": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "count": {
+                                  "maximum": 9007199254740991,
+                                  "minimum": 0,
+                                  "type": "integer",
+                                },
+                                "emoji": {
+                                  "type": "string",
+                                },
+                                "key": {
+                                  "type": "string",
+                                },
+                                "sortOrder": {
+                                  "maximum": 9007199254740991,
+                                  "minimum": -9007199254740991,
+                                  "type": "integer",
+                                },
+                              },
+                              "required": [
+                                "key",
+                                "emoji",
+                                "count",
+                                "sortOrder",
+                              ],
+                              "type": "object",
+                            },
+                            "type": "array",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "pageviews",
+                          "commentCount",
+                          "reactions",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                  },
+                  "required": [
+                    "pages",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                    },
+                    "detail": {
+                      "type": "string",
+                    },
+                    "errors": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "message",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "instance": {
+                      "type": "string",
+                    },
+                    "status": {
+                      "maximum": 9007199254740991,
+                      "minimum": -9007199254740991,
+                      "type": "integer",
+                    },
+                    "title": {
+                      "type": "string",
+                    },
+                    "type": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "detail",
+                    "instance",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+        },
+        "summary": "Pageviews, comment counts and reaction totals for up to 100 pages",
+        "tags": [
+          "pages",
+        ],
+      },
+    },
+    "/api/pageviews": {
+      "post": {
+        "description": "Creates the page on first view. Increments atomically in the database.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "path": {
+                    "description": "Page path, e.g. /my-post. Absolute URLs are accepted and reduced to their path.",
+                    "maxLength": 2048,
+                    "minLength": 1,
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "path",
+                ],
+                "type": "object",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "pageviews": {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                    "path": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "path",
+                    "pageviews",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                    },
+                    "detail": {
+                      "type": "string",
+                    },
+                    "errors": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "message",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "instance": {
+                      "type": "string",
+                    },
+                    "status": {
+                      "maximum": 9007199254740991,
+                      "minimum": -9007199254740991,
+                      "type": "integer",
+                    },
+                    "title": {
+                      "type": "string",
+                    },
+                    "type": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "detail",
+                    "instance",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                    },
+                    "detail": {
+                      "type": "string",
+                    },
+                    "errors": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                          },
+                          "path": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "path",
+                          "message",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "instance": {
+                      "type": "string",
+                    },
+                    "status": {
+                      "maximum": 9007199254740991,
+                      "minimum": -9007199254740991,
+                      "type": "integer",
+                    },
+                    "title": {
+                      "type": "string",
+                    },
+                    "type": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "detail",
+                    "instance",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+        },
+        "summary": "Record a pageview",
+        "tags": [
+          "pages",
+        ],
+      },
+    },
+    "/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "ok",
+                      ],
+                      "type": "string",
+                    },
+                    "uptimeSeconds": {
+                      "type": "number",
+                    },
+                  },
+                  "required": [
+                    "status",
+                    "uptimeSeconds",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+        },
+      },
+    },
+    "/ready": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checks": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "database": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "error": {
+                              "type": "string",
+                            },
+                            "latencyMs": {
+                              "type": "number",
+                            },
+                            "ok": {
+                              "type": "boolean",
+                            },
+                          },
+                          "required": [
+                            "ok",
+                          ],
+                          "type": "object",
+                        },
+                        "migrations": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "applied": {
+                              "type": "number",
+                            },
+                            "error": {
+                              "type": "string",
+                            },
+                            "ok": {
+                              "type": "boolean",
+                            },
+                          },
+                          "required": [
+                            "ok",
+                          ],
+                          "type": "object",
+                        },
+                      },
+                      "required": [
+                        "database",
+                        "migrations",
+                      ],
+                      "type": "object",
+                    },
+                    "status": {
+                      "enum": [
+                        "ready",
+                        "degraded",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "status",
+                    "checks",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checks": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "database": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "error": {
+                              "type": "string",
+                            },
+                            "latencyMs": {
+                              "type": "number",
+                            },
+                            "ok": {
+                              "type": "boolean",
+                            },
+                          },
+                          "required": [
+                            "ok",
+                          ],
+                          "type": "object",
+                        },
+                        "migrations": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "applied": {
+                              "type": "number",
+                            },
+                            "error": {
+                              "type": "string",
+                            },
+                            "ok": {
+                              "type": "boolean",
+                            },
+                          },
+                          "required": [
+                            "ok",
+                          ],
+                          "type": "object",
+                        },
+                      },
+                      "required": [
+                        "database",
+                        "migrations",
+                      ],
+                      "type": "object",
+                    },
+                    "status": {
+                      "enum": [
+                        "ready",
+                        "degraded",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "status",
+                    "checks",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Default Response",
+          },
+        },
+      },
+    },
+  },
+  "tags": [
+    {
+      "description": "Reading and posting comments",
+      "name": "comments",
+    },
+    {
+      "description": "Pageviews, reactions and per-page stats",
+      "name": "pages",
+    },
+  ],
+}
+`;

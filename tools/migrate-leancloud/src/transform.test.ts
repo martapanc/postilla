@@ -4,7 +4,6 @@ import {
   buildPages,
   hashEmail,
   mapStatus,
-  normalizePath,
   parseUserType,
   resolveRoot,
   transformComments,
@@ -43,27 +42,9 @@ const counter = (over: Partial<LeanCounter> & { objectId: string; url: string })
   ...over,
 });
 
-describe('normalizePath', () => {
-  it.each([
-    ['/post', '/post'],
-    ['/post/', '/post'],
-    ['/Post', '/post'],
-    ['/post?utm_source=x', '/post'],
-    ['/post#comments', '/post'],
-    ['post', '/post'],
-    ['//post//deep//', '/post/deep'],
-    ['https://example.com/post/', '/post'],
-    ['/', '/'],
-  ])('%s → %s', (input, expected) => {
-    expect(normalizePath(input)).toBe(expected);
-  });
-
-  it('is idempotent', () => {
-    for (const raw of ['/Post/', 'post?x=1', 'https://example.com/a//b/']) {
-      expect(normalizePath(normalizePath(raw))).toBe(normalizePath(raw));
-    }
-  });
-});
+// normalizePath now lives in the server domain and is tested there
+// (apps/server/src/domain/page/path.test.ts); the migrator imports it so the
+// two can never disagree about what a page path is.
 
 describe('timestamps', () => {
   /**

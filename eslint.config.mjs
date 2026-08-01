@@ -48,6 +48,9 @@ export default tseslint.config(
       // no validated config object for them to read from.
       'apps/server/src/infrastructure/db/migrate.ts',
       'tools/**/src/cli.ts',
+      // The integration-test harness connects to whatever database the
+      // developer or CI provides; there is no app config at that point.
+      'apps/server/src/test-support/**',
       '**/*.config.ts',
       '**/*.test.ts',
     ],

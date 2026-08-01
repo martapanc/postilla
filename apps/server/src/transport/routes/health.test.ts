@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { buildApp } from '../../app.js';
 import { loadConfig } from '../../config/env.js';
-import type { Container } from '../../container.js';
+import { createContainerFrom, type Container } from '../../container.js';
 
 /**
  * Uses `app.inject()`, so the whole request lifecycle runs — routing,
@@ -18,12 +18,15 @@ const config = loadConfig({
   LOG_LEVEL: 'fatal',
 });
 
+/**
+ * Built through the real composition root so these tests exercise the same
+ * wiring production uses; only the database is a stub, since liveness and
+ * readiness are the only behaviour under test.
+ */
 function containerWithDb(execute: () => Promise<unknown>): Container {
-  return {
-    config,
-    db: { execute } as unknown as Container['db'],
-    shutdown: () => Promise.resolve(),
-  };
+  return createContainerFrom(config, { execute } as unknown as Container['db'], () =>
+    Promise.resolve(),
+  );
 }
 
 describe('GET /health', () => {

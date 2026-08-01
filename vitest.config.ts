@@ -29,6 +29,11 @@ export default defineConfig({
           include: ['apps/**/*.integration.test.ts', 'tools/**/*.integration.test.ts'],
           exclude: ['**/node_modules/**', '**/dist/**'],
           environment: 'node',
+          // Every file shares one database and truncates between tests, so
+          // running them concurrently means they delete each other's fixtures.
+          // Sequential is the honest fix; per-worker schemas would buy speed
+          // this suite does not yet need.
+          fileParallelism: false,
           // Containers and migrations make these far slower than unit tests.
           testTimeout: 60_000,
           hookTimeout: 120_000,

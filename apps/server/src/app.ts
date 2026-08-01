@@ -2,13 +2,16 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
+import swagger from '@fastify/swagger';
 import {
+  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import { registerErrorHandler } from './transport/error-handler.js';
 import { registerHealthRoutes } from './transport/routes/health.js';
+import { registerPublicRoutes } from './transport/routes/public.js';
 import type { Container } from './container.js';
 
 declare module 'fastify' {
@@ -69,8 +72,27 @@ export async function buildApp(container: Container): Promise<FastifyInstance> {
     global: false, // Opt in per route; the limits differ far too much to share one.
   });
 
+  // The OpenAPI document is generated from the same zod schemas that validate
+  // requests, so it cannot drift from what the server actually accepts. It is
+  // snapshot-tested, which makes any accidental API change fail loudly.
+  await app.register(swagger, {
+    openapi: {
+      info: {
+        title: 'Postilla API',
+        description: 'Comment system for static blogs.',
+        version: '0.1.0',
+      },
+      tags: [
+        { name: 'comments', description: 'Reading and posting comments' },
+        { name: 'pages', description: 'Pageviews, reactions and per-page stats' },
+      ],
+    },
+    transform: jsonSchemaTransform,
+  });
+
   registerErrorHandler(app);
   await app.register(registerHealthRoutes);
+  await app.register(registerPublicRoutes);
 
   return app;
 }

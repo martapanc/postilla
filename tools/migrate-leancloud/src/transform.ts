@@ -1,6 +1,11 @@
 import { createHash } from 'node:crypto';
 import type { LeanComment, LeanCounter, LeanUser } from './records.js';
 import { SOCIAL_FIELDS } from './records.js';
+// One definition of what a normalized path is, shared with the API — so a
+// comment imported from 2025 and one posted today land on the same page row.
+import { normalizePath } from '@postilla/server/domain/page-path';
+
+export { normalizePath };
 
 /**
  * Pure transformation: LeanCloud records in, rows for the new schema out.
@@ -17,34 +22,6 @@ export interface Rejection {
 export interface Note {
   kind: string;
   detail: string;
-}
-
-/**
- * Canonical page path. LeanCloud stores the path a visitor's browser reported,
- * so two spellings of one page would otherwise become two rows and split the
- * comment thread.
- */
-export function normalizePath(raw: string): string {
-  let path = raw.trim();
-
-  // Tolerate absolute URLs; we only ever key on the path.
-  if (/^https?:\/\//i.test(path)) {
-    try {
-      path = new URL(path).pathname;
-    } catch {
-      /* fall through and treat it as a path */
-    }
-  }
-
-  path = path.split('#')[0] ?? path;
-  path = path.split('?')[0] ?? path;
-  path = path.toLowerCase();
-  if (!path.startsWith('/')) path = `/${path}`;
-  // Collapse duplicate slashes, then drop a trailing one (but keep the root).
-  path = path.replaceAll(/\/{2,}/g, '/');
-  if (path.length > 1) path = path.replace(/\/+$/, '');
-
-  return path;
 }
 
 /** Stable pseudonymous key for a commenter: gravatar, and the audit policy. */
