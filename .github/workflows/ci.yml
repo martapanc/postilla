@@ -76,7 +76,9 @@ jobs:
       - name: Check for uncommitted schema drift
         run: pnpm db:drift
 
-      - run: pnpm test:integration
+      # Coverage spans both suites: the domain is unit-tested, but transport
+      # and infrastructure are only exercised here.
+      - run: pnpm test:coverage
 
   build:
     name: Build

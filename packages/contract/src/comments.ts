@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { pagePath, paginationMeta, paginationQuery } from './common.js';
+import { localeCode, pagePath, paginationMeta, paginationQuery } from './common.js';
 
 /**
  * The public shape of a comment.
@@ -64,6 +64,36 @@ export const commentCountQuery = z.object({
 export const commentCountResponse = z.object({
   counts: z.array(z.object({ path: z.string(), count: z.number().int().nonnegative() })),
 });
+
+/**
+ * A new comment, as the widget submits it.
+ *
+ * Email is optional but, when given, is what enables reply notifications, a
+ * gravatar, and the auditFirstOnly policy. It is stored and never returned.
+ */
+export const createCommentBody = z.object({
+  path: pagePath,
+  parentId: z.uuid().nullish(),
+  comment: z.string().min(1).max(20_000),
+  nick: z.string().min(1).max(200),
+  mail: z.email().max(320).nullish(),
+  link: z.url().max(2048).nullish(),
+  /** Cloudflare Turnstile token; required only when a captcha is configured. */
+  captchaToken: z.string().max(4096).nullish(),
+  locale: localeCode.optional(),
+});
+
+export const createCommentResponse = z.object({
+  id: z.uuid(),
+  /**
+   * `pending` means the comment was accepted but is awaiting moderation, so
+   * the widget can say so rather than appearing to lose it.
+   */
+  status: z.enum(['approved', 'pending']),
+});
+
+export type CreateCommentBody = z.infer<typeof createCommentBody>;
+export type CreateCommentResponse = z.infer<typeof createCommentResponse>;
 
 export type PublicComment = z.infer<typeof publicComment>;
 export type CommentThread = z.infer<typeof commentThread>;

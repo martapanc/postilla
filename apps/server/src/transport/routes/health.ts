@@ -28,6 +28,13 @@ const readyResponse = z.object({
       error: z.string().optional(),
     }),
   }),
+  /**
+   * Which notification channels are configured. Surfaced because "Telegram
+   * silently stopped being configured" is otherwise invisible until someone
+   * notices they stopped getting messages.
+   */
+  channels: z.array(z.string()),
+  pendingNotifications: z.number().int().optional(),
 });
 
 export async function registerHealthRoutes(app: FastifyInstance): Promise<void> {
@@ -57,9 +64,18 @@ export async function registerHealthRoutes(app: FastifyInstance): Promise<void> 
         return Number(result.rows[0]?.count ?? 0);
       });
 
+      const pending = await timed(async () => {
+        const result = await db.execute<{ count: string }>(
+          sql`select count(*)::text as count from notification_outbox where delivered_at is null`,
+        );
+        return Number(result.rows[0]?.count ?? 0);
+      });
+
       const ok = database.ok && migrations.ok;
 
       const body = {
+        channels: app.container.channels.map((channel) => channel.id),
+        ...(pending.ok ? { pendingNotifications: pending.value } : {}),
         status: ok ? ('ready' as const) : ('degraded' as const),
         checks: {
           database: database.ok

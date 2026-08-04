@@ -24,7 +24,9 @@
     "db:generate": "pnpm --filter @postilla/server db:generate",
     "db:migrate": "pnpm --filter @postilla/server db:migrate",
     "db:drift": "pnpm --filter @postilla/server db:drift",
-    "db:studio": "pnpm --filter @postilla/server db:studio"
+    "db:studio": "pnpm --filter @postilla/server db:studio",
+    "db:backfill-html": "pnpm --filter @postilla/server db:backfill-html",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

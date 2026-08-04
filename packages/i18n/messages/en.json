@@ -1,0 +1,18 @@
+{
+  "notify.comment.created.subject": "💬 New comment on {siteName}",
+  "notify.comment.created.title": "New comment on {siteName}",
+  "notify.comment.created.author": "{author} wrote:",
+  "notify.comment.created.onPage": "On: {page}",
+  "notify.comment.created.status": "Status: {status}",
+  "notify.comment.reply.subject": "💬 {author} replied to your comment",
+  "notify.comment.reply.title": "{author} replied to you on {siteName}",
+  "notify.reaction.added.title": "{emoji} New reaction on {siteName}",
+  "notify.reaction.added.kindTotal": "{emoji} {count, plural, one {# reaction} other {# reactions}}",
+  "notify.reaction.added.pageTotal": "{count, plural, one {# reaction} other {# reactions}} on this page in total",
+  "notify.common.viewComment": "View comment",
+  "notify.common.viewPage": "View page",
+  "notify.common.moderate": "Review in the dashboard",
+  "status.approved": "published",
+  "status.pending": "awaiting review",
+  "status.spam": "spam"
+}

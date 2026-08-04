@@ -1,0 +1,249 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renderNotification — snapshots > comment.created / discord-markdown / en 1`] = `
+{
+  "body": "**New comment on No True Feminist**
+
+Wanblee wrote:
+> Complimenti per questo articolo!
+> 
+> Vedi la fonte \\(https://example.com\\).
+
+On: La società italiana è patriarcale
+Status: published
+
+[View comment](https://notruefeminist.com/la-societa-italiana-e-patriarcale)",
+  "subject": "💬 New comment on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / discord-markdown / it 1`] = `
+{
+  "body": "**Nuovo commento su No True Feminist**
+
+Wanblee ha scritto:
+> Complimenti per questo articolo!
+> 
+> Vedi la fonte \\(https://example.com\\).
+
+Su: La società italiana è patriarcale
+Stato: pubblicato
+
+[Vedi il commento](https://notruefeminist.com/la-societa-italiana-e-patriarcale)",
+  "subject": "💬 Nuovo commento su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / email-html / en 1`] = `
+{
+  "body": "<strong>New comment on No True Feminist</strong><br>
+<br>
+Wanblee wrote:<br>
+<blockquote>Complimenti per questo articolo!
+
+Vedi la fonte (https://example.com).</blockquote><br>
+<br>
+On: La società italiana è patriarcale<br>
+Status: published<br>
+<br>
+<a href="https://notruefeminist.com/la-societa-italiana-e-patriarcale">View comment</a>",
+  "subject": "💬 New comment on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / email-html / it 1`] = `
+{
+  "body": "<strong>Nuovo commento su No True Feminist</strong><br>
+<br>
+Wanblee ha scritto:<br>
+<blockquote>Complimenti per questo articolo!
+
+Vedi la fonte (https://example.com).</blockquote><br>
+<br>
+Su: La società italiana è patriarcale<br>
+Stato: pubblicato<br>
+<br>
+<a href="https://notruefeminist.com/la-societa-italiana-e-patriarcale">Vedi il commento</a>",
+  "subject": "💬 Nuovo commento su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / plain-text / en 1`] = `
+{
+  "body": "New comment on No True Feminist
+
+Wanblee wrote:
+| Complimenti per questo articolo!
+| 
+| Vedi la fonte (https://example.com).
+
+On: La società italiana è patriarcale
+Status: published
+
+View comment: https://notruefeminist.com/la-societa-italiana-e-patriarcale",
+  "subject": "💬 New comment on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / plain-text / it 1`] = `
+{
+  "body": "Nuovo commento su No True Feminist
+
+Wanblee ha scritto:
+| Complimenti per questo articolo!
+| 
+| Vedi la fonte (https://example.com).
+
+Su: La società italiana è patriarcale
+Stato: pubblicato
+
+Vedi il commento: https://notruefeminist.com/la-societa-italiana-e-patriarcale",
+  "subject": "💬 Nuovo commento su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / telegram-html / en 1`] = `
+{
+  "body": "<b>New comment on No True Feminist</b>
+
+Wanblee wrote:
+<blockquote>Complimenti per questo articolo!
+
+Vedi la fonte (https://example.com).</blockquote>
+
+On: La società italiana è patriarcale
+Status: published
+
+<a href="https://notruefeminist.com/la-societa-italiana-e-patriarcale">View comment</a>",
+  "subject": "💬 New comment on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > comment.created / telegram-html / it 1`] = `
+{
+  "body": "<b>Nuovo commento su No True Feminist</b>
+
+Wanblee ha scritto:
+<blockquote>Complimenti per questo articolo!
+
+Vedi la fonte (https://example.com).</blockquote>
+
+Su: La società italiana è patriarcale
+Stato: pubblicato
+
+<a href="https://notruefeminist.com/la-societa-italiana-e-patriarcale">Vedi il commento</a>",
+  "subject": "💬 Nuovo commento su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / discord-markdown / en 1`] = `
+{
+  "body": "**❤️ New reaction on No True Feminist**
+
+❤️ 32 reactions
+55 reactions on this page in total
+
+On: Perché No True Feminist
+
+[View page](https://notruefeminist.com/perche-no-true-feminist)",
+  "subject": "❤️ New reaction on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / discord-markdown / it 1`] = `
+{
+  "body": "**❤️ Nuova reaction su No True Feminist**
+
+❤️ 32 reaction
+55 reaction in totale su questa pagina
+
+Su: Perché No True Feminist
+
+[Vedi la pagina](https://notruefeminist.com/perche-no-true-feminist)",
+  "subject": "❤️ Nuova reaction su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / email-html / en 1`] = `
+{
+  "body": "<strong>❤️ New reaction on No True Feminist</strong><br>
+<br>
+❤️ 32 reactions<br>
+55 reactions on this page in total<br>
+<br>
+On: Perché No True Feminist<br>
+<br>
+<a href="https://notruefeminist.com/perche-no-true-feminist">View page</a>",
+  "subject": "❤️ New reaction on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / email-html / it 1`] = `
+{
+  "body": "<strong>❤️ Nuova reaction su No True Feminist</strong><br>
+<br>
+❤️ 32 reaction<br>
+55 reaction in totale su questa pagina<br>
+<br>
+Su: Perché No True Feminist<br>
+<br>
+<a href="https://notruefeminist.com/perche-no-true-feminist">Vedi la pagina</a>",
+  "subject": "❤️ Nuova reaction su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / plain-text / en 1`] = `
+{
+  "body": "❤️ New reaction on No True Feminist
+
+❤️ 32 reactions
+55 reactions on this page in total
+
+On: Perché No True Feminist
+
+View page: https://notruefeminist.com/perche-no-true-feminist",
+  "subject": "❤️ New reaction on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / plain-text / it 1`] = `
+{
+  "body": "❤️ Nuova reaction su No True Feminist
+
+❤️ 32 reaction
+55 reaction in totale su questa pagina
+
+Su: Perché No True Feminist
+
+Vedi la pagina: https://notruefeminist.com/perche-no-true-feminist",
+  "subject": "❤️ Nuova reaction su No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / telegram-html / en 1`] = `
+{
+  "body": "<b>❤️ New reaction on No True Feminist</b>
+
+❤️ 32 reactions
+55 reactions on this page in total
+
+On: Perché No True Feminist
+
+<a href="https://notruefeminist.com/perche-no-true-feminist">View page</a>",
+  "subject": "❤️ New reaction on No True Feminist",
+}
+`;
+
+exports[`renderNotification — snapshots > reaction.added / telegram-html / it 1`] = `
+{
+  "body": "<b>❤️ Nuova reaction su No True Feminist</b>
+
+❤️ 32 reaction
+55 reaction in totale su questa pagina
+
+Su: Perché No True Feminist
+
+<a href="https://notruefeminist.com/perche-no-true-feminist">Vedi la pagina</a>",
+  "subject": "❤️ Nuova reaction su No True Feminist",
+}
+`;

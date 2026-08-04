@@ -14,6 +14,15 @@ const csv = z.string().transform((s) =>
     .filter(Boolean),
 );
 
+/**
+ * Env vars are strings. Accepts the spellings people actually write, and
+ * rejects anything else rather than silently treating it as false — a typo in
+ * `COMMENT_AUDIT` should not quietly publish every comment.
+ */
+const boolish = z
+  .enum(['true', 'false', '1', '0', 'yes', 'no', 'on', 'off'])
+  .transform((v) => ['true', '1', 'yes', 'on'].includes(v));
+
 const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -42,6 +51,46 @@ const envSchema = z
     DEFAULT_LOCALE: z.enum(['en', 'it']).default('en'),
 
     SECRET_KEY: z.string().min(32, 'SECRET_KEY must be at least 32 characters'),
+
+    // ── Moderation ──────────────────────────────────────────────────────────
+    /** Hold every comment for review. */
+    COMMENT_AUDIT: boolish.default(false),
+    /** Hold only a commenter's first comment; auto-approve them thereafter. */
+    COMMENT_AUDIT_FIRST_ONLY: boolish.default(false),
+    /** Case-insensitive substrings that mark a comment as spam outright. */
+    FORBIDDEN_WORDS: csv.default([]),
+
+    // ── Submission limits ───────────────────────────────────────────────────
+    COMMENT_MIN_INTERVAL_SECONDS: z.coerce.number().int().nonnegative().default(15),
+    COMMENT_MAX_PER_WINDOW: z.coerce.number().int().positive().default(10),
+    COMMENT_WINDOW_SECONDS: z.coerce.number().int().positive().default(3600),
+    COMMENT_MAX_LENGTH: z.coerce.number().int().positive().default(5000),
+    COMMENT_MAX_NAME_LENGTH: z.coerce.number().int().positive().default(60),
+
+    // ── Third parties. Absent means the feature is off. ─────────────────────
+    AKISMET_KEY: z.string().min(1).optional(),
+    TURNSTILE_SECRET: z.string().min(1).optional(),
+
+    // ── Notifications. A channel with no credentials is simply not built. ───
+    TELEGRAM_BOT_TOKEN: z.string().min(1).optional(),
+    TELEGRAM_CHAT_ID: z.string().min(1).optional(),
+    DISCORD_WEBHOOK: z.url().optional(),
+    WEBHOOK_URL: z.url().optional(),
+
+    SMTP_HOST: z.string().min(1).optional(),
+    SMTP_PORT: z.coerce.number().int().positive().default(1025),
+    SMTP_SECURE: boolish.default(false),
+    SMTP_USER: z.string().min(1).optional(),
+    SMTP_PASSWORD: z.string().min(1).optional(),
+    SMTP_FROM: z.string().min(1).optional(),
+    /** Where comment notifications are sent. Usually the site owner. */
+    NOTIFY_EMAIL_TO: z.email().optional(),
+
+    /** Reactions inside this window collapse into one notification. */
+    REACTION_COALESCE_WINDOW_SECONDS: z.coerce.number().int().positive().default(900),
+    OUTBOX_POLL_INTERVAL_MS: z.coerce.number().int().positive().default(5000),
+    /** Set false to run the API without a notification worker in-process. */
+    OUTBOX_WORKER_ENABLED: boolish.default(true),
   })
   .transform((env, ctx) => {
     const siteName = env.SITE_NAME ?? env.WALINE_SITE_NAME;
@@ -67,6 +116,37 @@ export interface AppConfig {
   readonly site: { name: string; url: string | undefined; serverUrl: string };
   readonly locale: { default: Env['DEFAULT_LOCALE'] };
   readonly secretKey: string;
+  readonly moderation: {
+    auditAll: boolean;
+    auditFirstOnly: boolean;
+    forbiddenWords: string[];
+  };
+  readonly limits: {
+    minIntervalSeconds: number;
+    maxPerWindow: number;
+    windowSeconds: number;
+    maxBodyLength: number;
+    maxNameLength: number;
+  };
+  readonly akismet: { apiKey: string } | null;
+  readonly turnstile: { secretKey: string } | null;
+  readonly notifications: {
+    telegram: { botToken: string; chatId: string } | null;
+    discord: { webhookUrl: string } | null;
+    webhook: { url: string } | null;
+    email: {
+      host: string;
+      port: number;
+      secure: boolean;
+      user: string | undefined;
+      password: string | undefined;
+      from: string;
+      to: string;
+    } | null;
+    coalesceWindowSeconds: number;
+    pollIntervalMs: number;
+    workerEnabled: boolean;
+  };
 }
 
 /**
@@ -100,5 +180,46 @@ export function loadConfig(source: NodeJS.ProcessEnv = process.env): AppConfig {
     site: { name: env.SITE_NAME, url: env.SITE_URL, serverUrl: env.SERVER_URL },
     locale: { default: env.DEFAULT_LOCALE },
     secretKey: env.SECRET_KEY,
+    moderation: {
+      auditAll: env.COMMENT_AUDIT,
+      auditFirstOnly: env.COMMENT_AUDIT_FIRST_ONLY,
+      forbiddenWords: env.FORBIDDEN_WORDS,
+    },
+    limits: {
+      minIntervalSeconds: env.COMMENT_MIN_INTERVAL_SECONDS,
+      maxPerWindow: env.COMMENT_MAX_PER_WINDOW,
+      windowSeconds: env.COMMENT_WINDOW_SECONDS,
+      maxBodyLength: env.COMMENT_MAX_LENGTH,
+      maxNameLength: env.COMMENT_MAX_NAME_LENGTH,
+    },
+    // Presence of a key is what enables the integration, so "is Akismet on?"
+    // is answered once at boot rather than at every call site.
+    akismet: env.AKISMET_KEY ? { apiKey: env.AKISMET_KEY } : null,
+    turnstile: env.TURNSTILE_SECRET ? { secretKey: env.TURNSTILE_SECRET } : null,
+    notifications: {
+      // Telegram needs both halves to be useful; a token without a chat id is
+      // a misconfiguration, not a half-enabled channel.
+      telegram:
+        env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID
+          ? { botToken: env.TELEGRAM_BOT_TOKEN, chatId: env.TELEGRAM_CHAT_ID }
+          : null,
+      discord: env.DISCORD_WEBHOOK ? { webhookUrl: env.DISCORD_WEBHOOK } : null,
+      webhook: env.WEBHOOK_URL ? { url: env.WEBHOOK_URL } : null,
+      email:
+        env.SMTP_HOST && env.SMTP_FROM && env.NOTIFY_EMAIL_TO
+          ? {
+              host: env.SMTP_HOST,
+              port: env.SMTP_PORT,
+              secure: env.SMTP_SECURE,
+              user: env.SMTP_USER,
+              password: env.SMTP_PASSWORD,
+              from: env.SMTP_FROM,
+              to: env.NOTIFY_EMAIL_TO,
+            }
+          : null,
+      coalesceWindowSeconds: env.REACTION_COALESCE_WINDOW_SECONDS,
+      pollIntervalMs: env.OUTBOX_POLL_INTERVAL_MS,
+      workerEnabled: env.OUTBOX_WORKER_ENABLED,
+    },
   };
 }

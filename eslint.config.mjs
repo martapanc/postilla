@@ -48,6 +48,7 @@ export default tseslint.config(
       // no validated config object for them to read from.
       'apps/server/src/infrastructure/db/migrate.ts',
       'tools/**/src/cli.ts',
+      'apps/server/src/infrastructure/db/backfill-html.ts',
       // The integration-test harness connects to whatever database the
       // developer or CI provides; there is no app config at that point.
       'apps/server/src/test-support/**',
@@ -156,7 +157,11 @@ export default tseslint.config(
   // Command-line entry points report to stdout by design; that is their
   // interface, not stray debugging.
   {
-    files: ['tools/**/src/cli.ts', 'apps/server/src/infrastructure/db/migrate.ts'],
+    files: [
+      'tools/**/src/cli.ts',
+      'apps/server/src/infrastructure/db/backfill-html.ts',
+      'apps/server/src/infrastructure/db/migrate.ts',
+    ],
     rules: { 'no-console': 'off' },
   },
 

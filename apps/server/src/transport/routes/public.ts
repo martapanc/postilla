@@ -1,5 +1,7 @@
 import {
   commentCountQuery,
+  createCommentBody,
+  createCommentResponse,
   commentCountResponse,
   listCommentsQuery,
   listCommentsResponse,
@@ -8,6 +10,8 @@ import {
   problemDetails,
   recordPageviewBody,
   recordPageviewResponse,
+  recordReactionBody,
+  recordReactionResponse,
 } from '@postilla/contract';
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
@@ -19,7 +23,8 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod';
  */
 export async function registerPublicRoutes(app: FastifyInstance): Promise<void> {
   const typed = app.withTypeProvider<ZodTypeProvider>();
-  const { listComments, getPageStats, recordPageview } = app.container.useCases;
+  const { listComments, getPageStats, recordPageview, createComment, recordReaction } =
+    app.container.useCases;
 
   typed.get(
     '/api/comments',
@@ -85,5 +90,78 @@ export async function registerPublicRoutes(app: FastifyInstance): Promise<void> 
       config: { rateLimit: { max: 30, timeWindow: '1 minute' } },
     },
     async (request) => recordPageview(request.body.path),
+  );
+
+  typed.post(
+    '/api/comments',
+    {
+      schema: {
+        tags: ['comments'],
+        summary: 'Submit a comment',
+        description:
+          'Returns 200 with status `pending` when the comment was accepted but is awaiting moderation. Spam is rejected with 422.',
+        body: createCommentBody,
+        response: {
+          201: createCommentResponse,
+          400: problemDetails,
+          403: problemDetails,
+          404: problemDetails,
+          422: problemDetails,
+          429: problemDetails,
+        },
+      },
+      // The only unauthenticated write. The domain applies its own per-author
+      // limits on top; this one is a coarse per-IP backstop.
+      config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    },
+    async (request, reply) => {
+      const result = await createComment({
+        path: request.body.path,
+        parentId: request.body.parentId ?? null,
+        bodyMarkdown: request.body.comment,
+        authorName: request.body.nick,
+        authorEmail: request.body.mail ?? null,
+        authorUrl: request.body.link ?? null,
+        authorIp: request.ip,
+        userAgent: request.headers['user-agent'] ?? null,
+        captchaToken: request.body.captchaToken ?? null,
+        locale: request.body.locale ?? app.container.config.locale.default,
+        // Authentication arrives in M5; until then every submission is a guest.
+        actor: null,
+      });
+
+      return reply.status(201).send(result);
+    },
+  );
+
+  typed.post(
+    '/api/reactions',
+    {
+      schema: {
+        tags: ['pages'],
+        summary: 'Add or remove a reaction',
+        description:
+          'Idempotent per visitor: reacting twice adds one. Returns both the count for this reaction and the page total.',
+        body: recordReactionBody,
+        response: { 200: recordReactionResponse, 400: problemDetails, 404: problemDetails },
+      },
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+    },
+    async (request) => {
+      const result = await recordReaction({
+        path: request.body.path,
+        kindKey: request.body.kind,
+        remove: request.body.remove,
+        visitorIp: request.ip,
+        userAgent: request.headers['user-agent'] ?? null,
+      });
+
+      return {
+        kind: result.kindKey,
+        kindTotal: result.kindTotal,
+        pageTotal: result.pageTotal,
+        active: result.active,
+      };
+    },
   );
 }

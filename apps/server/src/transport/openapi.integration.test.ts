@@ -49,6 +49,7 @@ describe('OpenAPI document', () => {
       '/api/comments/count',
       '/api/pages',
       '/api/pageviews',
+      '/api/reactions',
       '/health',
       '/ready',
     ]);

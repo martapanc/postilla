@@ -46,3 +46,21 @@ export type ReactionCount = z.infer<typeof reactionCount>;
 export type PageStats = z.infer<typeof pageStats>;
 export type PageStatsResponse = z.infer<typeof pageStatsResponse>;
 export type RecordPageviewResponse = z.infer<typeof recordPageviewResponse>;
+
+export const recordReactionBody = z.object({
+  path: pagePath,
+  /** A key from the reaction registry, e.g. "heart". */
+  kind: z.string().min(1).max(50),
+  /** Toggle an existing reaction off. */
+  remove: z.boolean().default(false),
+});
+
+export const recordReactionResponse = z.object({
+  kind: z.string(),
+  kindTotal: z.number().int().nonnegative(),
+  pageTotal: z.number().int().nonnegative(),
+  /** Whether this visitor's reaction is now recorded. */
+  active: z.boolean(),
+});
+
+export type RecordReactionResponse = z.infer<typeof recordReactionResponse>;
